@@ -2,6 +2,7 @@
 
 AM_CPPFLAGS = \
 	-I$(srcdir)/include \
+	-I$(srcdir)/util \
 	-D_GNU_SOURCE \
 	-DSYSCONFDIR=\"$(sysconfdir)\" \
 	-DRDMADIR=\"@rdmadir@\" \
@@ -60,6 +61,9 @@ src_libfabric_la_SOURCES = \
 	src/fi_tostr.c \
 	src/log.c \
 	src/var.c \
+	util/shm/fi_shm_utils.c \
+	util/shm/fi_shm_cm.c \
+	util/shm/fi_shm_cq.c \
 	$(common_srcs)
 
 if MACOS
@@ -269,6 +273,7 @@ include prov/psm/Makefile.include
 include prov/psm2/Makefile.include
 include prov/mxm/Makefile.include
 include prov/gni/Makefile.include
+include prov/shm/Makefile.include
 
 man_MANS = $(real_man_pages) $(prov_install_man_pages) $(dummy_man_pages)
 

@@ -1,0 +1,35 @@
+if HAVE_SHM
+_shm_files = \
+	prov/shm/src/shmx.h \
+	prov/shm/src/shmx_init.c \
+	prov/shm/src/shmx_domain.c \
+	prov/shm/src/shmx_cq.c \
+	prov/shm/src/shmx_av.c \
+	prov/shm/src/shmx_ep.c \
+	prov/shm/src/shmx_cm.c \
+	prov/shm/src/shmx_tagged.c \
+	prov/shm/src/shmx_util.c
+
+if HAVE_SHM_DL
+pkglib_LTLIBRARIES += libshmx-fi.la
+libshmx_fi_la_SOURCES = $(_shm_files) $(common_srcs)
+libshmx_fi_la_CPPFLAGS = $(AM_CPPFLAGS) $(shm_CPPFLAGS)
+libshmx_fi_la_LDFLAGS = \
+    -module -avoid-version -shared -export-dynamic $(shm_LDFLAGS)
+libshmx_fi_la_LIBADD = $(linkback) $(shm_LIBS)
+libshmx_fi_la_DEPENDENCIES = $(linkback)
+else !HAVE_SHM_DL
+noinst_LTLIBRARIES += libshmx.la
+libshmx_la_SOURCES = $(_shm_files)
+libshmx_la_CPPFLAGS = $(src_libfabric_la_CPPFLAGS) $(shm_CPPFLAGS)
+libshmx_la_LDFLAGS = $(shm_LDFLAGS)
+libshmx_la_LIBADD = $(shm_LIBS)
+src_libfabric_la_LIBADD += libshmx.la
+src_libfabric_la_DEPENDENCIES += libshmx.la
+endif !HAVE_SHM_DL
+
+prov_install_man_pages += man/man7/fi_shm.7
+
+endif HAVE_SHM
+
+prov_dist_man_pages += man/man7/fi_shm.7

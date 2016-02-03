@@ -394,6 +394,7 @@ libdl_done:
 	fi_register_provider(MXM_INIT, NULL);
 	fi_register_provider(VERBS_INIT, NULL);
 	fi_register_provider(GNI_INIT, NULL);
+	fi_register_provider(SHM_INIT, NULL);
         /* Initialize the sockets provider last.  This will result in
            it being the least preferred provider. */
 	fi_register_provider(SOCKETS_INIT, NULL);
