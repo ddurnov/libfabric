@@ -170,7 +170,8 @@ int fi_shm_tagged_recv(struct shm_ep *ep, void *buf, size_t len,
                 goto fn_enqueue;
         }
 
-        if ((connection->recv_ptr == NULL) && (connection != FI_SHM_SELF_ADDR))
+        if ((connection->recv_ptr == NULL) &&
+	    (connection != (fi_shm_connection_t *)FI_SHM_SELF_ADDR))
         {
                 /* Connection hasn't been completely established. Enqueue the recv request */
 

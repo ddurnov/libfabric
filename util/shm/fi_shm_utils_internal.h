@@ -334,8 +334,8 @@ void fi_shm_trace(char *fmt, ...)
 int
 fi_shm_ep_handle_incoming_connections(struct shm_ep * ep);
 int
-fi_shm_flush_connection(struct fi_shm_cq   * cq,
-			fi_shm_connection_t * connection);
+fi_shm_cq_poll_all(struct fi_shm_cq *cq, struct fi_cq_tagged_entry *cqe,
+		   int count, fi_addr_t *src_addr);
 void fi_shm_debug_dump_connection(fi_shm_connection_t * connection);
 void fi_shm_debug_dump_ep(struct shm_ep * ep);
 void fi_shm_cq_enqueue_event(struct fi_shm_cq *cq, struct fi_shm_cq_event *event);
