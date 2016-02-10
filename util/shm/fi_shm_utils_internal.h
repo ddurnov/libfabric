@@ -18,6 +18,7 @@
 #include <numa.h>
 #include <numaif.h>
 #include "mpool.h"
+
 #define FI_SHM_MEMCPY_DEFAULT  (0)
 #define FI_SHM_MEMCPY_COMPILER (1)
 #define FI_SHM_MEMCPY_MOVB     (2)
@@ -199,6 +200,8 @@ typedef struct fi_shm_connection {
 	fi_shm_blockid_t sendBlockId; /* cache */
 	fi_shm_blockid_t recvBlockId; /* cache */
 
+	int activity_counter;
+
 	pid_t pid;
 	int numa_node;
 
@@ -209,6 +212,7 @@ typedef struct fi_shm_connection {
 	fi_shm_request_t * last_unexpected_request;
 
 	SLIST_ENTRY(fi_shm_connection) total_connections;
+	LIST_ENTRY(fi_shm_connection) active_connections;
 } __attribute__ ((aligned (64))) fi_shm_connection_t;
 
 typedef fi_shm_connection_t fi_shm_epaddr_t;
@@ -251,11 +255,15 @@ struct shm_ep {
 	/* SHM connection management */
 	struct mpool *connections_pool;
 	SLIST_HEAD(, fi_shm_connection) total_connection_list;
+	LIST_HEAD(, fi_shm_connection) active_connection_list;
+	fi_shm_connection_t * last_polled_connection;
+	fi_shm_connection_t * last_flushed_connection;
+	fi_shm_connection_t * min_activity_connection;
+	int active_poll_count;
 	fi_shm_blockid_t          myConnBlockId;
 	int                     my_current_conn_ctrl_pool_size;
 	fi_shm_conn_ctrl_pool_t * my_conn_ptr;
 	fi_shm_blockid_t          myNumaNodeId;
-
 	/* Global posted and unexpected queues */
 	fi_shm_req_queue_t posted_recv_request_queue;
 	fi_shm_req_queue_t unexpected_recv_request_queue;
@@ -272,6 +280,7 @@ struct fi_shm_env {
 	int debug;
 	int warning;
 	int busy_wait_count;
+	int active_poll_count;
 	int numa_aware;
 };
 extern struct fi_shm_env fi_shm_env;

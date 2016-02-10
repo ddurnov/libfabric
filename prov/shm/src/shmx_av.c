@@ -45,12 +45,12 @@ shmx_av_insert(struct fid_av *av, const void *addr, size_t count,
 
 	av_priv = container_of(av, struct shmx_fid_av, av);
 
-    for (i = 0; i < count; i++)
-    {
-        err = fi_shm_connect(&av_priv->ep->shm_ep,
-                             (void*)((char *)addr + fi_shm_addrlen()*i),
-                             fi_addr + i);
-    }
+	for (i = 0; i < count; i++)
+	{
+		err = fi_shm_connect(&av_priv->ep->shm_ep,
+				     (void*)((char *)addr + fi_shm_addrlen() * i),
+				     fi_addr + i);
+	}
 
 	return shmx_errno(err);
 }
@@ -64,7 +64,7 @@ shmx_av_remove(struct fid_av *av, fi_addr_t *fi_addr, size_t count,
 
 	av_priv = container_of(av, struct shmx_fid_av, av);
 
-    (void)av_priv;
+	(void)av_priv;
 
 	return shmx_errno(err);
 }
